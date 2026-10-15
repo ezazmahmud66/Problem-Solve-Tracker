@@ -180,3 +180,4 @@ puts "Total binary bytes: #{total_bytes}"
 
 puts "\nFINAL SHA3-256 HASH:"
 puts final_hash
+puts(" ")
