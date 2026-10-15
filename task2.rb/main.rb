@@ -1,15 +1,11 @@
-
-# Itransition Internship - Task 02
-# Phase 07: String Concatenation
-
 require "openssl"
 
 ROOT = __dir__
 DATA_FOLDER = File.join(ROOT, "task2")
 
-puts "=== TASK 2: PHASE 07 ==="
+puts "=== TASK 2: PHASE 08 ==="
 
-# Step 1: Verify SHA3-256 support
+# Step 1: Verify SHA3-256 algorithm
 begin
   expected = "3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532"
   actual = OpenSSL::Digest.new("SHA3-256").hexdigest("abc")
@@ -59,17 +55,16 @@ rescue SystemCallError, IOError, OpenSSL::OpenSSLError => e
   abort "ERROR: File processing failed: #{e.message}"
 end
 
-puts "\n[3] HASH GENERATION"
-puts "Files processed: #{file_details.length}"
-puts "Total binary bytes: #{total_bytes}"
-puts "Hashes generated: #{file_details.length}"
-
 valid_hashes = file_details.all? do |file|
   file[:hash].match?(/\A[0-9a-f]{64}\z/)
 end
 
-abort "ERROR: Invalid hash format!" unless valid_hashes
+abort "ERROR: Invalid SHA3-256 hash!" unless valid_hashes
 
+puts "\n[3] HASH GENERATION"
+puts "Files processed: #{file_details.length}"
+puts "Hashes generated: #{file_details.length}"
+puts "Total binary bytes: #{total_bytes}"
 puts "Hash format: PASS"
 
 # Step 4: Calculate custom sorting keys
@@ -105,7 +100,6 @@ puts "Total sorted hashes: #{sorted_hashes.length}"
 
 # Step 5: Join sorted original hashes
 joined_hashes = sorted_hashes.join
-
 expected_hash_length = sorted_hashes.length * 64
 
 unless joined_hashes.length == expected_hash_length &&
@@ -120,7 +114,7 @@ puts "Expected length: #{expected_hash_length}"
 puts "Actual length: #{joined_hashes.length}"
 puts "Concatenation: PASS"
 
-# Step 6: Read and normalize registered email
+# Step 6: Read registered email
 puts "\n[6] EMAIL VALIDATION"
 print "Enter registered email: "
 
@@ -134,13 +128,12 @@ if email.empty? || email.match?(/\s/) ||
   abort "ERROR: Invalid email format!"
 end
 
-puts "Lowercase email: #{email}"
 puts "Email length: #{email.length}"
+puts "Lowercase conversion: PASS"
 puts "Email validation: PASS"
 
-# Step 7: Append email
+# Step 7: Concatenate hashes and email
 final_string = joined_hashes + email
-
 expected_final_length = expected_hash_length + email.length
 
 valid_final_string =
@@ -155,21 +148,35 @@ puts "Hashes length: #{joined_hashes.length}"
 puts "Email length: #{email.length}"
 puts "Expected total length: #{expected_final_length}"
 puts "Actual total length: #{final_string.length}"
-puts "No separators: PASS"
-puts "Email appended: PASS"
-puts "Final string validation: PASS"
+puts "Concatenation validation: PASS"
 
-# Step 8: Final report
-puts "\n[8] FINAL RESULT"
-puts "SHA3-256 hashing: PASS"
+# Step 8: Generate FINAL SHA3-256 hash
+final_hash = OpenSSL::Digest.new("SHA3-256").hexdigest(final_string)
+
+# Step 9: Validate final hash
+valid_final_hash = final_hash.match?(/\A[0-9a-f]{64}\z/)
+
+abort "ERROR: Final hash validation failed!" unless valid_final_hash
+
+puts "\n[8] FINAL SHA3-256 VERIFICATION"
+puts "Algorithm: SHA3-256"
+puts "Input string length: #{final_string.length}"
+puts "Final hash length: #{final_hash.length}"
+puts "Lowercase hexadecimal: PASS"
+puts "Final hash validation: PASS"
+
+# Step 10: Final report
+puts "\n[9] FINAL RESULT"
+puts "SHA3-256 self-test: PASS"
 puts "Binary processing: PASS"
+puts "Hash generation: PASS"
 puts "Custom sorting: PASS"
 puts "Hash concatenation: PASS"
 puts "Email normalization: PASS"
-puts "Final string validation: PASS"
+puts "Final SHA3-256: PASS"
 puts "Total files processed: #{file_details.length}"
 puts "Total hashes joined: #{sorted_hashes.length}"
 puts "Total binary bytes: #{total_bytes}"
-puts "Final string length: #{final_string.length}"
 
-puts "\nPHASE 07 COMPLETED SUCCESSFULLY"
+puts "\nFINAL SHA3-256 HASH:"
+puts final_hash
